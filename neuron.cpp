@@ -43,22 +43,35 @@ void Neuron::addSpike(Time temps)
 	spike_times_.push_back(temps);
 }
 
-void Neuron::update(Time simtime, double courant)
+void Neuron::update(Time simtime, Time runTime, double courant)
 {
-		input_current_ = courant;
-		if(isRefractory()){
+	Time break_time(refractory_period);
+	while(simtime < runTime)
+		{	
+			input_current_ = courant;
+			if(isRefractory()){
+					setMbPotential(resting_potential);
+					if(break_time <= 0.0){
+						setRefractory(false);
+					}
+					//on crée une var local break_time qui stocke le resting time et est décrementée à chaque passage dans la boucle
+					break_time -= h;
+					
+			}else if(getMbPotential() >= threshold_potential){
+				addSpike(simtime);
 				setMbPotential(resting_potential);
-				setRefractory(false);
-		}else if(getMbPotential() > threshold_potential){
-			addSpike(simtime);
-			setMbPotential(resting_potential);
-			setRefractory(true);
-		}
-		//pas de nouveau calcul en periode refractaire
-		if(!refractory_){
-			setMbPotential(solveVoltEqu());
+				setRefractory(true);
+				//on reset break_time à sa valeur initiale
+				break_time = refractory_period;
 			}
-		//cerr << getMbPotential() << endl;
+			//pas de nouveau calcul en periode refractaire
+			if(!refractory_){
+				setMbPotential(solveVoltEqu());
+			}
+			cerr << getMbPotential() << endl;
+			simtime += h;
+		};
+
 }
 
 Neuron::Neuron()
