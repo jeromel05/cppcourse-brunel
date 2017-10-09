@@ -1,12 +1,20 @@
 #include <iostream>
 #include "neuron.cpp"
+#include "network.cpp"
+
 
 int main()
 {
-	Neuron n1;
+	Neuron n1(1);
+	Neuron n2(2);
+	Network net;
 	
-	n1.update(0.0, 0.5,	1.1);
+	net.addNeuron(&n1);
+	net.addNeuron(&n2);
+	net.addTarget(1, &n2);
+	net.update(0.0, 50, 4);
+	
 	
 return 0;
 }
-		
+
