@@ -12,7 +12,7 @@ int main()
 	net.addNeuron(&n1);
 	net.addNeuron(&n2);
 	net.addTarget(1, &n2);
-	net.update(0.0, 50, 4);
+	net.update(0.0, 200, 1.1);
 	
 	
 return 0;

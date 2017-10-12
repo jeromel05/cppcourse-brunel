@@ -61,11 +61,13 @@ void Network::reset()
 		}
 	}
 	*/
-	for(auto& c: neurons_){
-		delete c;
-		c = nullptr;
+	if(!neurons_.empty()){
+		for(auto& c: neurons_){
+			delete c;
+			c = nullptr;
+		}
+		neurons_.clear();
 	}
-	neurons_.clear();
 	//synapses_post_.clear();
 }
 

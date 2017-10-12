@@ -21,9 +21,18 @@ int Neuron::getIndex() const
 
 void Neuron::setMbPotential(double potMb)
 {
+	/*
 //mettre throw catch pour pas sortir du range
-//if(potMb < 0.0 or potMb > 100){
+	try{
+		if(potMb < 0.0 or potMb > 100){
+			throw "Mb Potential out of bounds";
+		}
 		membrane_potential_ = potMb;
+	}
+	*/
+
+		membrane_potential_ = potMb;
+
 }
 
 void Neuron::setRefractory(bool refrac)
@@ -102,12 +111,14 @@ bool Neuron::update(Time start_time, int simulation_steps, double courant)
 				setMbPotential(solveVoltEqu());
 			}
 			++step_count;
-			cerr << "pot de " << getIndex() << " : " << getMbPotential() << endl;
-			
-		rotateBuffer();
+			if(getIndex() == 2){
+			cerr << getMbPotential() << endl;
+		}
+		
 		if(buffer_[0] > 0.0){
 			receive_excitatory(start_time, buffer_[0]);
 		}		
+		rotateBuffer();
 			
 	if(nb_spikes > 0.0) return true; else return false;
 }
