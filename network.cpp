@@ -3,48 +3,33 @@
 
 using namespace std;
 
-void Network::addTarget(int i, Neuron* cible)
-{
-	if(!synapses_post_.empty()){
-		synapses_post_[i - 1][i-1] = cible;
-	}
-}
-
 void Network::addNeuron(Neuron* neuron)
 {
+	assert(neuron != nullptr);
 	neurons_.push_back(neuron);
 }
 
 Neuron Network::getNeuron(int index) const
 {
-	if(index > 0){
-		return *neurons_[index - 1];
-	}else{
-		return *neurons_[0];
-	}
+	assert(index > 0);
+	return *neurons_[index - 1];
 }
 
-void Network::update(Time start_time, int simulation_steps, double courant_ext)
+void Network::update(int start_step, int simulation_steps, double courant_ext)
 {
+	assert(simulation_steps > 0 and start_step < simulation_steps);
 	bool spike(false);
-	int step_count(start_time / h);
-	
+	int step_count(start_step);
+		
 	while(step_count < simulation_steps)
 	{	
-		if(!neurons_.empty() and neurons_.front() != nullptr and !synapses_post_.empty() and synapses_post_.front()[0] != nullptr){
+		assert(!neurons_.empty() and neurons_.front() != nullptr);
 			for(auto& e: neurons_){
-					//Ici seul le neurone 1 recoit le courant
-					if(e->getIndex() < 2){
-						spike = e->update(step_count * h, 1, courant_ext);
-					}else{
-						spike = e->update(step_count * h, 1, 0.0);
-					}
-					if(spike and synapses_post_.front()[0] != nullptr and !synapses_post_.empty()){
-							for(auto& i: synapses_post_[e->getIndex() - 1]){
-								i->fill_buffer();
-							}
-						}
-					}
+				if(e->getSynapses().empty()){
+					spike = e->update(step_count, 1, 0.0);
+				}else{
+					spike = e->update(step_count, 1, courant_ext);
+				}
 			}
 	++step_count;
 	};		
@@ -52,15 +37,6 @@ void Network::update(Time start_time, int simulation_steps, double courant_ext)
 
 void Network::reset()
 {
-	/*
-	Pour mettre un vector
-	for(auto& f: synapses_post_){
-		for(auto& i: f){
-			delete i;
-			i = nullptr;
-		}
-	}
-	*/
 	if(!neurons_.empty()){
 		for(auto& c: neurons_){
 			delete c;
@@ -68,7 +44,7 @@ void Network::reset()
 		}
 		neurons_.clear();
 	}
-	//synapses_post_.clear();
+	//appel à reset() seulement necessaire si on crée des new neurones
 }
 
 Network::Network()
@@ -77,7 +53,4 @@ Network::Network()
 }
 
 Network::~Network()
-{
-	//appel à reset() cree memory freed was not allocated ??
-	//reset();
-}
+{}
