@@ -22,10 +22,8 @@ Time Neuron::getSingleSpikeTime(int i) const
 bool Neuron::isRefractory() const
 {	return refractory_;		}
 
-std::vector<Neuron*> Neuron::getSynapses() const
-{
-	return synapses_post_;
-}
+bool Neuron::isExitatory() const
+{	return exitatory_;	}
 
 void Neuron::setMbPotential(double potMb)
 {
@@ -38,7 +36,7 @@ void Neuron::setMbPotential(double potMb)
 		membrane_potential_ = potMb;
 	}
 	catch(string a){
-		cerr << a << endl;
+		cerr << a << ": " << potMb << endl;
 		setMbPotential(resting_potential);	
 	}
 }
@@ -48,15 +46,27 @@ void Neuron::setRefractory(bool refrac)
 	refractory_ = refrac;
 }
 
+void Neuron::set_i_ext(double i_ext)
+{
+	i_ext_ = i_ext;
+}
+
+void Neuron::set_J(double j)
+{
+	J_ = j;
+}
+
 int Neuron::idx(int i) const
 {
 	return i%(D+1);
 }
 
-
 double Neuron::solveVoltEqu() const
 {
-	return c1 * getMbPotential() + input_current_ * R * c2;
+	std::random_device rd;
+    std::mt19937 gen(rd());
+	std::poisson_distribution<> d(nu_ext * C_E * h * J_E);
+	return c1 * getMbPotential() + i_ext_ * R * c2; //+ d(gen);
 }
 
 void Neuron::addSpike(Time temps)
@@ -66,7 +76,11 @@ void Neuron::addSpike(Time temps)
 
 void Neuron::receive_excitatory(int time_step)
 {
-	setMbPotential(solveVoltEqu() + buffer_[0]);
+	if(buffer_[0] < -solveVoltEqu()){
+		setMbPotential(resting_potential);								//possible d'avoir une valeur négative donc on remet à 0
+	}else{
+		setMbPotential(solveVoltEqu() + buffer_[0]);
+	}
 	//on a utilisé le premier element du buffer donc on le remet à 0
 	cerr << "recu a: " << time_step * h << endl;
 	buffer_[0] = 0.0;
@@ -80,34 +94,27 @@ void Neuron::affiche_buffer() const
 	cout << endl;
 }
 
-void Neuron::fill_buffer(int local_steps, int delay, double EPSP_amp)
+void Neuron::fill_buffer(int local_steps, int delay)
 {
-	buffer_[idx(delay + local_steps)] += EPSP_amp;
+	buffer_[idx(delay + local_steps)] += J_;
 }
 		
 void Neuron::rotateBuffer()
 {
-	//buffer_.back() = 0.0;
-	buffer_.back() = buffer_[0];										//similaire à la ligne d'en haut mais crée effet cyclique
+	buffer_.back() = buffer_[0];										//crée effet cyclique
 	for(size_t i(0); i < buffer_.size(); ++i){
 		buffer_[i] = buffer_[i + 1];
 	}
 }
 
-void Neuron::addTarget(Neuron* cible)
-{
-	assert(cible != nullptr);
-	synapses_post_.push_back(cible);
-}
-
-
-bool Neuron::update(int start_step, int simulation_steps, double courant)
+bool Neuron::update(int simulation_steps, int start_step)
 {
 	if(simulation_steps < 1) return false;
 	int step_count(start_step);
-	int nb_spikes(0.0);
-		
-		input_current_ = courant;
+	int nb_spikes(0);
+	simulation_steps += start_step;
+	
+	while(step_count < simulation_steps){
 			
 		if(getMbPotential() >= threshold_potential){					//on test d'abord si potentiel >= threshold -> passe moins souvent dans la boucle
 				addSpike(step_count * h);
@@ -131,35 +138,25 @@ bool Neuron::update(int start_step, int simulation_steps, double courant)
 					receive_excitatory(start_step);
 				}	
 				
-	if(nb_spikes > 0.0){
-			for(auto& i: synapses_post_){
-				i->fill_buffer(step_count);
-			}
-	}
 	rotateBuffer();
 	++step_count;
+	};
 	
-	if(nb_spikes > 0.0) return true; else return false;
+	if(nb_spikes > 0) return true; else return false;
 }
 
-Neuron::Neuron()
-:membrane_potential_(resting_potential), refractory_(false), input_current_(0.0), break_time_(refractory_period)
+Neuron::Neuron(bool exitatory)
+:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), input_current_(0.0), break_time_(refractory_period), exitatory_(exitatory)
 {
 	for(auto& e: buffer_){
 		e = 0.0;
 	}
+	if(exitatory_){
+		set_J(J_E);
+	}else{
+		set_J(J_I);
+	}	
 }
 
 Neuron::~Neuron()
 {}
-
-void Neuron::reset()
-{
-	for(auto& i: synapses_post_){
-			delete i;
-			i = nullptr;
-		}
-	synapses_post_.clear();
-}
-
-

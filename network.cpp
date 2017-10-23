@@ -3,11 +3,13 @@
 
 using namespace std;
 
+/*
 void Network::addNeuron(Neuron* neuron)
 {
 	assert(neuron != nullptr);
 	neurons_.push_back(neuron);
 }
+*/
 
 Neuron Network::getNeuron(int index) const
 {
@@ -15,34 +17,75 @@ Neuron Network::getNeuron(int index) const
 	return *neurons_[index - 1];
 }
 
-void Network::update(int start_step, int simulation_steps, double courant_ext)
+void Network::net_set_i_ext(double i_ext)
 {
-	assert(simulation_steps > 0 and start_step < simulation_steps);
+	assert(!neurons_.empty());
+	for(auto& e: neurons_){
+		assert(e != nullptr);
+		e->set_i_ext(i_ext);
+	}	
+}
+
+void Network::affiche_connections() const
+{
+	for(auto e: connections_){
+		for(auto h: e){
+			cout << h;
+		}
+		cout << endl;
+	}
+}
+	
+void Network::create_connections()
+{
+	//ou selctionner 1000 nb random des indices des escitateurs et 250 des excitateurs
+	//ainsi on pourra avoir 2x le meme indice
+	std::random_device rd;
+    std::mt19937 gen(rd());
+	std::bernoulli_distribution d(0.1);
+	for(auto& e: connections_){
+		for(auto& h: e){
+			h = d(gen);
+		}
+	}
+}
+
+void Network::update(int simulation_steps)
+{
+	assert(simulation_steps > 0);
 	bool spike(false);
-	int step_count(start_step);
+	int step_count(0);
 		
 	while(step_count < simulation_steps)
 	{	
-		assert(!neurons_.empty() and neurons_.front() != nullptr);
-			for(auto& e: neurons_){
-				if(e->getSynapses().empty()){
-					spike = e->update(step_count, 1, 0.0);
-				}else{
-					spike = e->update(step_count, 1, courant_ext);
+		assert(!neurons_.empty());
+			for(size_t i(0); i < nb_neurons; ++i){
+				assert(neurons_[i] != nullptr);
+					spike = neurons_[i]->update(1, step_count);
+					if(spike){
+						for(size_t y(0); y < nb_neurons; ++y){
+							if(connections_[i][y]){
+								neurons_[y]->fill_buffer(step_count);
+							}
+						}
+					}
 				}
-			}
 	++step_count;
 	};		
 }
 
 void Network::reset()
 {
+	for(auto& e: connections_){
+		for(auto& h: e){
+			h = 0;
+		}
+	}
 	if(!neurons_.empty()){
 		for(auto& c: neurons_){
 			delete c;
 			c = nullptr;
 		}
-		neurons_.clear();
 	}
 	//appel à reset() seulement necessaire si on crée des new neurones
 }
@@ -50,7 +93,38 @@ void Network::reset()
 Network::Network()
 {		
 	reset();
+	create_connections();
+	/*
+	 * //pour une array
+	for(size_t i(0); i < nb_excitateur; ++i){
+	try{
+		neurons_[i] = new Neuron(true);
+	}
+	catch (std::bad_alloc &e)
+	{
+		cerr << "new Failed";
+	}
+	}
+	for(size_t i(nb_excitateur + 1); i < neurons_.size(); ++i){
+			neurons_[i] = new Neuron(false);
+	}
+	*/
+	for(size_t i(0); i < nb_neurons; ++i){
+		try{
+			if(i < nb_excitateur){
+				neurons_.push_back(new Neuron(true));
+			}else{
+				neurons_.push_back(new Neuron(false));
+			}
+		}
+		catch (std::bad_alloc &e)
+		{
+			cerr << "new Failed";
+		}
+	}
 }
 
 Network::~Network()
-{}
+{
+	reset();
+}

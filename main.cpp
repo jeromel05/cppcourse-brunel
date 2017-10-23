@@ -5,20 +5,11 @@
 
 int main()
 {
-	Neuron n1;
-	Neuron n2;
 	Network net;
-	
-	n1.addTarget(&n2);	
-	
-	net.addNeuron(&n1);
-	net.addNeuron(&n2);
-	net.update(0.0, 5000, 1.01);
-	
-	for(auto e: n1.getTimeSpikes())
-	{
-		std::cout << e << std::endl;
-	}
+
+	net.net_set_i_ext(1.01);
+
+	net.update(1000);
 	
 return 0;
 }
