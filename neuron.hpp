@@ -79,7 +79,6 @@ public:
 	int idx(int i) const;
 	double solveVoltEqu() const;
 	void addSpike(Time temps);
-	void receive_excitatory(int time_step);
 	
 	void rotateBuffer();
 	void affiche_buffer() const;

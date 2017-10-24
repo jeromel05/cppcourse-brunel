@@ -17,7 +17,6 @@ TEST (neuron_unittest, SpikeTime) {
 	
 	neuron.set_i_ext(1.01);
 	neuron.update(4000);
-	std::cerr << "taille: " << neuron.getTimeSpikes().size() << std::endl;
 	
 	EXPECT_EQ(92.4, neuron.getSingleSpikeTime(1));
 	EXPECT_NEAR(185.100 - 1E-3, neuron.getSingleSpikeTime(2), 185.100 + 1E-3); //pas posiible de faible l'égalité exacte avec ce nb

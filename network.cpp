@@ -3,13 +3,6 @@
 
 using namespace std;
 
-/*
-void Network::addNeuron(Neuron* neuron)
-{
-	assert(neuron != nullptr);
-	neurons_.push_back(neuron);
-}
-*/
 
 Neuron Network::getNeuron(int index) const
 {
@@ -43,10 +36,12 @@ void Network::create_connections()
 	std::random_device rd;
     std::mt19937 gen(rd());
 	std::bernoulli_distribution d(0.1);
-	for(auto& e: connections_){
-		for(auto& h: e){
-			h = d(gen);
-		}
+	for(size_t i(0); i < nb_neurons; ++i){
+				for(size_t y(0); y < nb_neurons; ++y){
+					if(i != y){											//pas de connection d'un neurone avec lui meme
+						connections_[i][y] = d(gen);
+					}
+				}
 	}
 }
 
@@ -94,29 +89,15 @@ Network::Network()
 {		
 	reset();
 	create_connections();
-	/*
-	 * //pour une array
-	for(size_t i(0); i < nb_excitateur; ++i){
-	try{
-		neurons_[i] = new Neuron(true);
-	}
-	catch (std::bad_alloc &e)
-	{
-		cerr << "new Failed";
-	}
-	}
-	for(size_t i(nb_excitateur + 1); i < neurons_.size(); ++i){
-			neurons_[i] = new Neuron(false);
-	}
-	*/
+
 	for(size_t i(0); i < nb_neurons; ++i){
-		try{
-			if(i < nb_excitateur){
-				neurons_.push_back(new Neuron(true));
-			}else{
-				neurons_.push_back(new Neuron(false));
-			}
+	try{
+		if(i < nb_excitateur){
+			neurons_[i] = new Neuron(true);
+		}else{
+			neurons_[i] = new Neuron(false);
 		}
+	}
 		catch (std::bad_alloc &e)
 		{
 			cerr << "new Failed";

@@ -56,34 +56,29 @@ void Neuron::set_J(double j)
 	J_ = j;
 }
 
+/*
 int Neuron::idx(int i) const
 {
 	return i%(D+1);
 }
+*/
 
 double Neuron::solveVoltEqu() const
 {
+	//if(buffer_[0] > 0.0) cerr << "recu" << endl;
 	std::random_device rd;
     std::mt19937 gen(rd());
 	std::poisson_distribution<> d(nu_ext * C_E * h * J_E);
-	return c1 * getMbPotential() + i_ext_ * R * c2; //+ d(gen);
+	if((c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + d(gen)) > 0.0){		//Impossible d'avoir un MbPot negatif
+		return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + d(gen);
+	}else{
+		return resting_potential;
+	}
 }
 
 void Neuron::addSpike(Time temps)
 {
 	spike_times_.push_back(temps);
-}
-
-void Neuron::receive_excitatory(int time_step)
-{
-	if(buffer_[0] < -solveVoltEqu()){
-		setMbPotential(resting_potential);								//possible d'avoir une valeur négative donc on remet à 0
-	}else{
-		setMbPotential(solveVoltEqu() + buffer_[0]);
-	}
-	//on a utilisé le premier element du buffer donc on le remet à 0
-	cerr << "recu a: " << time_step * h << endl;
-	buffer_[0] = 0.0;
 }
 
 void Neuron::affiche_buffer() const
@@ -96,7 +91,8 @@ void Neuron::affiche_buffer() const
 
 void Neuron::fill_buffer(int local_steps, int delay)
 {
-	buffer_[idx(delay + local_steps)] += J_;
+	//buffer_[idx(delay + local_steps)] += J_;
+	buffer_[delay - 1] += J_;
 }
 		
 void Neuron::rotateBuffer()
@@ -121,8 +117,7 @@ bool Neuron::update(int simulation_steps, int start_step)
 				setMbPotential(resting_potential);
 				setRefractory(true);
 				++nb_spikes;
-				cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
-			
+				//cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
 		}
 		if(isRefractory()){												//pas de nouveau calcul en période réfractaire
 				setMbPotential(resting_potential);
@@ -132,11 +127,10 @@ bool Neuron::update(int simulation_steps, int start_step)
 					}
 				break_time_ -= h;										//break_time stocke le resting time et est décrementée à chaque passage dans la boucle
 				
-		}else if(buffer_[0] <= 0.0){
-					setMbPotential(solveVoltEqu());
-				}else{
-					receive_excitatory(start_step);
-				}	
+		}else{
+			setMbPotential(solveVoltEqu());
+			buffer_[0] = 0.0;											//on a utilisé le premier element du buffer donc on le remet à 0
+		}
 				
 	rotateBuffer();
 	++step_count;

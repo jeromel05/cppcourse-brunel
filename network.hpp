@@ -18,8 +18,8 @@ typedef std::array<std::array<int, nb_neurons>, nb_neurons> Matrice;
 class Network
 {
 private:
-	//std::array<Neuron*, nb_neurons> neurons_;
-	std::vector<Neuron*> neurons_;
+	std::array<Neuron*, nb_neurons> neurons_;
+	//std::vector<Neuron*> neurons_;
 	Matrice	connections_;												//on met des int car on peut avoir 2 connections du meme neurone
 	
 public:
