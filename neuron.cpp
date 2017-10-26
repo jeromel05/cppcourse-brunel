@@ -27,16 +27,9 @@ bool Neuron::isExitatory() const
 
 void Neuron::setMbPotential(double potMb)
 {
-	string s("Mb Potential out of bounds");
-    //throw catch pour pas sortir du range
-	try{
-		if(potMb < 0.0 or potMb > 100){
-			throw s;
-		}
+	if(potMb >= 0.0){		//Impossible d'avoir un MbPot negatif
 		membrane_potential_ = potMb;
-	}
-	catch(string a){
-		cerr << a << ": " << potMb << endl;
+	}else{
 		setMbPotential(resting_potential);	
 	}
 }
@@ -69,11 +62,8 @@ double Neuron::solveVoltEqu() const
 	std::random_device rd;
     std::mt19937 gen(rd());
 	std::poisson_distribution<> d(nu_ext * C_E * h * J_E);
-	if((c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + d(gen)) > 0.0){		//Impossible d'avoir un MbPot negatif
-		return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + d(gen);
-	}else{
-		return resting_potential;
-	}
+	
+	return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + d(gen);
 }
 
 void Neuron::addSpike(Time temps)
@@ -131,7 +121,7 @@ bool Neuron::update(int simulation_steps, int start_step)
 			setMbPotential(solveVoltEqu());
 			buffer_[0] = 0.0;											//on a utilisé le premier element du buffer donc on le remet à 0
 		}
-				
+	//cerr << "MbPotential :" << getMbPotential() << endl;		
 	rotateBuffer();
 	++step_count;
 	};
@@ -140,7 +130,7 @@ bool Neuron::update(int simulation_steps, int start_step)
 }
 
 Neuron::Neuron(bool exitatory)
-:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), input_current_(0.0), break_time_(refractory_period), exitatory_(exitatory)
+:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), exitatory_(exitatory)
 {
 	for(auto& e: buffer_){
 		e = 0.0;

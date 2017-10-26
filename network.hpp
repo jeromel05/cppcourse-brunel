@@ -19,7 +19,6 @@ class Network
 {
 private:
 	std::array<Neuron*, nb_neurons> neurons_;
-	//std::vector<Neuron*> neurons_;
 	Matrice	connections_;												//on met des int car on peut avoir 2 connections du meme neurone
 	
 public:
