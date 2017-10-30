@@ -10,7 +10,6 @@ int main()
 	
 	net.update(1000);
 	
-				
 return 0;
 }
 

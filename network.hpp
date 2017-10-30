@@ -38,6 +38,9 @@ public:
 	 * a connection between any two neurons in the network
 	 */	
 	
+	double calculateFiringRate() const;
+
+	
 	void update(int simulation_steps);
 	/**
 	 * updates all the neurons in the network using their own update function
