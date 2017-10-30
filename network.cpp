@@ -18,16 +18,6 @@ void Network::net_set_i_ext(double i_ext)
 		e->set_i_ext(i_ext);
 	}	
 }
-
-void Network::affiche_connections() const
-{
-	for(auto e: connections_){
-		for(auto h: e){
-			cout << h;
-		}
-		cout << endl;
-	}
-}
 	
 void Network::create_connections()
 {
@@ -50,7 +40,8 @@ void Network::create_connections()
 					temp = dis2(gen);
 				}
 			}while(temp == i);
-				++connections_[i][temp];
+				assert(neurons_[i] != nullptr);
+				neurons_[i]->add_connection(neurons_[temp]);
 		}
 	}
 }
@@ -72,19 +63,17 @@ void Network::update(int simulation_steps)
 	while(step_count < simulation_steps)
 	{	
 		assert(!neurons_.empty());
-			for(size_t i(0); i < nb_neurons; ++i){
-				assert(neurons_[i] != nullptr);
-					spike = neurons_[i]->update(1, step_count);
+			for(auto& e: neurons_){
+				assert(e != nullptr);
+					spike = e->update(1, step_count);
 					if(spike){
 						//++res1;
-						for(size_t y(0); y < nb_neurons; ++y){
-							if(connections_[i][y]){
-								neurons_[y]->fill_buffer(step_count);
+						for(size_t y(0); y < (C_E + C_I); ++y){
+								e->get_synapses_post()[y].fill_buffer(step_count);
 							}
 						}
 					}
 					
-				}
 	//res[step_count] = res1;
 	//res1 = 0;
 	++step_count;
@@ -99,11 +88,6 @@ void Network::update(int simulation_steps)
 
 void Network::reset()
 {
-	for(auto& e: connections_){
-		for(auto& h: e){
-			h = 0;
-		}
-	}
 	if(!neurons_.empty()){
 		for(auto& c: neurons_){
 			delete c;
@@ -115,12 +99,9 @@ void Network::reset()
 
 Network::Network()
 {		
-	reset();
-	create_connections();
-
 	for(size_t i(0); i < nb_neurons; ++i){
 	try{
-		if(i < nb_excitateur){
+		if(i < nb_excitateur){											//Comment mettre addresse/objet entier a la place de ptr?????????????????
 				neurons_[i] = new Neuron(true);
 			}else{
 				neurons_[i] = new Neuron(false);
@@ -131,6 +112,8 @@ Network::Network()
 			cerr << "new Failed";
 		}
 	}
+	
+	create_connections();
 }
 
 Network::~Network()

@@ -50,6 +50,7 @@ private:
 	Buffer buffer_;														//buffer that stores that spike arriving to the neuron
 	bool exitatory_;													//indicates the type of the neuron: excitatory or inhibitory
 	double J_;															//Amplitude of the signal that this neuron sends to the ones downstream
+	std::vector<Neuron> synapses_post_;
 	
 	void set_J(double j);
 	/**
@@ -84,6 +85,7 @@ public:
 	/**
 	 * @return true if this neuron is an excitatory neuron, false if it is inhibitory
 	 */
+	std::vector<Neuron> get_synapses_post() const;
 	
 	void setMbPotential(double potMb);
 	/**
@@ -130,6 +132,7 @@ public:
 	 * @param local_steps: time at which the pre-synaptic spike occured 
 	 * @param delay: time that the spike takes to arrive to the soma
 	 */
+	void add_connection(Neuron post_neuron);
 	bool update(int simulation_steps, int start_step = 0);
 	/**
 	 * updates the neuron: MbPotential, refractory state, Post Synaptic potentials, rotates buffer...

@@ -10,11 +10,9 @@
 
 //-------CONSTANTS----------------------------------------------------//
 
-constexpr int nb_excitateur(1000);										//number of excitatory neurons
-constexpr int nb_inhibiteur(nb_excitateur / 4);							//number of inhibitory neurons
-constexpr int nb_neurons(nb_excitateur + nb_inhibiteur);				//total number of neurons
-
-typedef std::array<std::array<int, nb_neurons>, nb_neurons> Matrice;	
+constexpr int nb_excitateur(10000);										//number of excitatory neurons
+constexpr int nb_inhibiteur(2500);							//number of inhibitory neurons
+constexpr int nb_neurons(nb_excitateur + nb_inhibiteur);				//total number of neurons	
 
 
 /**
@@ -24,7 +22,6 @@ class Network
 {
 private:
 	std::array<Neuron*, nb_neurons> neurons_; ///list of all the neurons constituting the network
-	Matrice	connections_;	///Matrix storing all the connections between neurons (on met des int car on peut avoir 2 connections du meme neurone)
 	
 public:
 	
@@ -44,10 +41,7 @@ public:
 	 * set the value of the external current for all the neurons in the network
 	 * @param i_ext: value of external current
 	 */	
-	void affiche_connections() const;
-	/**
-	 * shows the matrix of all the neural connections
-	 */	
+
 	void create_connections();
 	/**
 	 * initialize the connection matrix using a 10% probability of creating
