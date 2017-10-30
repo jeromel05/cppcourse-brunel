@@ -7,18 +7,21 @@ using namespace std;
 double Neuron::getMbPotential() const
 {	return membrane_potential_;	}
 
-double Neuron::getNbSpikes() const
+unsigned int Neuron::getNbSpikes() const
 {	return spike_times_.size();	}
 
-vector<Time> Neuron::getTimeSpikes() const
+vector<unsigned int> Neuron::getTimeSpikes() const
 {	return spike_times_;	}
 
-Time Neuron::getSingleSpikeTime(int i) const
+unsigned int Neuron::getSingleSpikeTime(int i) const
 {	
-	assert(i > 0.0 and i <= getTimeSpikes().size());
+	assert(i > 0.0 and i < getTimeSpikes().size());
 	return spike_times_[i -1];	
 }
-		
+
+unsigned int Neuron::getIndex() const
+{	return index_;	}
+
 bool Neuron::isRefractory() const
 {	return refractory_;		}
 
@@ -59,17 +62,15 @@ int Neuron::idx(int i) const
 
 double Neuron::solveVoltEqu() const
 {
-	//if(buffer_[0] > 0.0) cerr << "recu" << endl;
-	std::random_device rd;
-    std::mt19937 gen(rd());
-	std::poisson_distribution<> d(nu_ext * C_E * h * J_E);
-	
-	return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + d(gen);
+	static std::random_device rd;
+    static std::mt19937 gen(rd());
+	static std::poisson_distribution<> d(nu_ext * C_E * J_E); 		// = 2
+	return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + J_E * d(gen);
 }
 
-void Neuron::addSpike(Time temps)
+void Neuron::addSpike(unsigned int time_step)
 {
-	spike_times_.push_back(temps);
+	spike_times_.push_back(time_step);
 }
 
 void Neuron::affiche_buffer() const
@@ -104,11 +105,11 @@ bool Neuron::update(int simulation_steps, int start_step)
 	while(step_count < simulation_steps){
 			
 		if(getMbPotential() >= threshold_potential){					//on test d'abord si potentiel >= threshold -> passe moins souvent dans la boucle
-				addSpike(step_count * h);
+				addSpike(step_count);
 				setMbPotential(resting_potential);
 				setRefractory(true);
 				++nb_spikes;
-				//cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
+				cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
 		}
 		if(isRefractory()){												//pas de nouveau calcul en période réfractaire
 				setMbPotential(resting_potential);
@@ -130,8 +131,8 @@ bool Neuron::update(int simulation_steps, int start_step)
 	if(nb_spikes > 0) return true; else return false;
 }
 
-Neuron::Neuron(bool excitatory)
-:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), exitatory_(excitatory)
+Neuron::Neuron(unsigned int index, bool excitatory)
+:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), index_(index), exitatory_(excitatory)
 {
 	for(auto& e: buffer_){
 		e = 0.0;

@@ -18,16 +18,6 @@ void Network::net_set_i_ext(double i_ext)
 		e->set_i_ext(i_ext);
 	}	
 }
-
-void Network::affiche_connections() const
-{
-	for(auto e: connections_){
-		for(auto h: e){
-			cout << h;
-		}
-		cout << endl;
-	}
-}
 	
 void Network::create_connections()
 {
@@ -36,8 +26,8 @@ void Network::create_connections()
 	std::random_device rd;
     std::mt19937 gen(rd());
     
-    std::uniform_int_distribution<> dis1(0, nb_excitateur);
-    std::uniform_int_distribution<> dis2(nb_excitateur + 1, nb_neurons);
+    std::uniform_int_distribution<> dis1(0, nb_excitateur - 1);
+    std::uniform_int_distribution<> dis2(nb_excitateur, nb_neurons - 1);
     int temp(0);
     
     //on reprend un autre nb tant que on a pris le meme que l'indice i pck pas de connection d'un neurone avec lui meme
@@ -50,7 +40,8 @@ void Network::create_connections()
 					temp = dis2(gen);
 				}
 			}while(temp == i);
-				++connections_[i][temp];
+				assert(neurons_[i] != nullptr);
+				synapses_post_[i].push_back(neurons_[temp]->getIndex());
 		}
 	}
 }
@@ -61,13 +52,13 @@ void Network::update(int simulation_steps)
 	bool spike(false);
 	int step_count(0);
 	
-	/* affiche nb spike par pas de temps
-	array<int, 1000> res;
-	int res1;
-	for(int i(0); i < res.size(); ++i){
-			res[i] = 0;
-		}
-	*/
+	cout << "Simulation started" << endl;
+
+	string file_name = "data.txt";
+	
+	ofstream out(file_name);
+		
+	// affiche nb spike par pas de temps
 	
 	while(step_count < simulation_steps)
 	{	
@@ -76,34 +67,27 @@ void Network::update(int simulation_steps)
 				assert(neurons_[i] != nullptr);
 					spike = neurons_[i]->update(1, step_count);
 					if(spike){
-						//++res1;
-						for(size_t y(0); y < nb_neurons; ++y){
-							if(connections_[i][y]){
-								neurons_[y]->fill_buffer(step_count);
+						if(i < 50){
+							out << step_count * h << '\t' << i << '\n';
+						}
+						for(size_t y(0); y < (C_E + C_I); ++y){
+								neurons_[synapses_post_[i][y]]->fill_buffer(step_count);
 							}
 						}
 					}
 					
-				}
-	//res[step_count] = res1;
-	//res1 = 0;
 	++step_count;
 	};
 	
-	/*
-	for(int i(0); i < res.size(); ++i){
-			cout << res[i] << " " << endl;
-		}	
-	*/
+	out.close();
+	
+	cout << "nu_thr: " << nu_thr << endl;
+	cout << "nu_ext: " << nu_ext << endl;
+	
 }
 
 void Network::reset()
 {
-	for(auto& e: connections_){
-		for(auto& h: e){
-			h = 0;
-		}
-	}
 	if(!neurons_.empty()){
 		for(auto& c: neurons_){
 			delete c;
@@ -115,15 +99,12 @@ void Network::reset()
 
 Network::Network()
 {		
-	reset();
-	create_connections();
-
 	for(size_t i(0); i < nb_neurons; ++i){
 	try{
-		if(i < nb_excitateur){
-				neurons_[i] = new Neuron(true);
+		if(i < nb_excitateur){										
+				neurons_[i] = new Neuron(i, true);
 			}else{
-				neurons_[i] = new Neuron(false);
+				neurons_[i] = new Neuron(i, false);
 		}
 	}
 		catch (std::bad_alloc &e)
@@ -131,6 +112,18 @@ Network::Network()
 			cerr << "new Failed";
 		}
 	}
+	
+	create_connections();
+	/*
+	for(auto e: synapses_post_){
+		for(auto i: e){
+			cout << i ;
+		}
+		cout << endl;
+	}
+	*/
+	
+	cout << "Network initialised" << endl;
 }
 
 Network::~Network()

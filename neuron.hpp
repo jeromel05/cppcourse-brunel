@@ -2,36 +2,9 @@
 #define NEURON_H
 
 #include <iostream>
-#include <cmath>
-#include <vector>
-#include <array>
-#include <string>
+#include "constants.hpp"
 #include <cassert>
 #include <random>
-
-typedef double Time;
-
-//-------CONSTANTS----------------------------------------------------//
-constexpr Time h(0.1);													//smallest time unit available is 1ms
-constexpr double threshold_potential(20.0);								//potential above which the neuron spikes [mV]
-constexpr Time tau(20.0);
-constexpr Time refractory_period(0.2);
-constexpr double resting_potential(0.0);								//doit etre a 0.0 car la formule le fait revenir à cette valeur, shift tout de +0.070
-constexpr double C(1.0);												//capacitance = [picoFarad]
-constexpr double R(tau / C);											//membrane_resistance
-
-constexpr int g(5);														//g = (J_I/J_E)
-constexpr int C_E(1000);												//C_E = 0.1 * nb_excitateur
-constexpr int C_I(C_E / 4);
-constexpr double J_E(0.1);												//J_E = EPSP Amplitude [mV]
-constexpr double J_I(- g * J_E);										//J_I = IPSP Amplitude [mV]
-constexpr int D(15); 													//D = Delay (travel time of spike in axon) [steps]
-
-const double c1(std::exp(-h / tau)); 									 //2 constantes initialisées dns le constructeur
-const double c2(1 - std::exp(-h / tau));
-
-constexpr double nu_thr(threshold_potential / (C_E * J_E * tau));		//frequence [Hz]
-constexpr double nu_ext(2 * nu_thr);									//frequence ext [Hz]
 
 typedef std::array<double, D + 1> Buffer;
 
@@ -42,18 +15,20 @@ typedef std::array<double, D + 1> Buffer;
 class Neuron
 {
 private:
-	double membrane_potential_;											//Neuron Membrane potential
-	double i_ext_;														//external current
-	std::vector<Time> spike_times_;										//number of times this neuron has spiked
-	bool refractory_;													//indicates if the neuron is in refractory state
-	Time break_time_;													//time that the neuron spends in refractory state
-	Buffer buffer_;														//buffer that stores that spike arriving to the neuron
-	bool exitatory_;													//indicates the type of the neuron: excitatory or inhibitory
-	double J_;															//Amplitude of the signal that this neuron sends to the ones downstream
+	double membrane_potential_;				///<Neuron Membrane potential
+	double i_ext_;							///<external current
+	std::vector<unsigned int> spike_times_;			///<number of times this neuron has spiked
+	bool refractory_;						///<indicates if the neuron is in refractory state
+	Time break_time_;						///<time that the neuron spends in refractory state
+	Buffer buffer_;							///<buffer that stores that spike arriving to the neuron
+	double J_;								///<Amplitude of the signal that this neuron sends to the ones downstream
+	unsigned int index_;
+	bool exitatory_;						///<indicates the type of the neuron: excitatory or inhibitory
+
 	
 	void set_J(double j);
 	/**
-	 * sets J, which is the strength of post synaptic potentiel sent by this neuron, depends on the type of the neuron
+	 * @brief sets J, which is the strength of post synaptic potentiel sent by this neuron, depends on the type of the neuron
 	 * @param j: the strength of post synaptic potentiel
 	 */
 
@@ -63,15 +38,15 @@ public:
 	/**
 	 * @return Membrane potential
 	 */
-	double getNbSpikes() const;
+	unsigned int getNbSpikes() const;
 	/**
 	 * @return number of times this neuron has spiked
 	 */
-	std::vector<Time> getTimeSpikes() const;
+	std::vector<unsigned int> getTimeSpikes() const;
 	/**
 	 * @return Vector storing all the spike times
 	 */
-	Time getSingleSpikeTime(int i) const;
+	unsigned int getSingleSpikeTime(int i) const;
 	/**
 	 * @param i: index of the spike
 	 * @return returns a single spike time
@@ -84,6 +59,7 @@ public:
 	/**
 	 * @return true if this neuron is an excitatory neuron, false if it is inhibitory
 	 */
+	unsigned int getIndex() const;
 	
 	void setMbPotential(double potMb);
 	/**
@@ -100,7 +76,7 @@ public:
 	 * @param i_ext: external current
 	 */
 	
-	int idx(int i) const;
+	unsigned int idx(int i) const;
 	/**
 	 * calculates the index for the buffer
 	 * @param i: time to be converted into index
@@ -111,7 +87,7 @@ public:
 	 * calculates the new membrane potential for the neuron by solving the differential equation
 	 * @return membrane potential
 	 */
-	void addSpike(Time temps);
+	void addSpike(unsigned int time_step);
 	/**
 	 * stores a spike that occured at a given time in spike_times_
 	 * @param time at which the spike occured
@@ -136,7 +112,7 @@ public:
 	 * @param simulation_steps: number of times that the neuron is updated
 	 * @param start_step: time step at which we start
 	 */	
-	Neuron(bool excitatory = true);
+	Neuron(unsigned int index = 0, bool excitatory = true);
 	/**
 	 * default constructor
 	 * @param excitatory: indicates the type of the neuron: excitatory or inhibitory
