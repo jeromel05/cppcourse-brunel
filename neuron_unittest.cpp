@@ -3,6 +3,13 @@
 #include "cmath"
 #include "gtest/include/gtest/gtest.h"
 
+/**
+ * Series of tests verifying that:
+ * 	- No spike if i_ext == 1.0
+ *  - Spikes arrive at right time with i_ext == 1.01
+ *  - Mb potential decreases to 0 with i_ext == 0.0
+ */
+
 TEST (neuron_unittest, MembranePotential) {
 	Neuron neuron;
 	

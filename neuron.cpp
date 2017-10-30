@@ -30,8 +30,9 @@ void Neuron::setMbPotential(double potMb)
 	if(potMb >= 0.0){		//Impossible d'avoir un MbPot negatif
 		membrane_potential_ = potMb;
 	}else{
-		setMbPotential(resting_potential);	
+		membrane_potential_ = resting_potential;	
 	}
+	assert(membrane_potential_ >= 0.0);
 }
 
 void Neuron::setRefractory(bool refrac)
@@ -129,8 +130,8 @@ bool Neuron::update(int simulation_steps, int start_step)
 	if(nb_spikes > 0) return true; else return false;
 }
 
-Neuron::Neuron(bool exitatory)
-:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), exitatory_(exitatory)
+Neuron::Neuron(bool excitatory)
+:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), exitatory_(excitatory)
 {
 	for(auto& e: buffer_){
 		e = 0.0;

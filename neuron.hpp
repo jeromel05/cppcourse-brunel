@@ -20,9 +20,9 @@ constexpr double resting_potential(0.0);								//doit etre a 0.0 car la formule
 constexpr double C(1.0);												//capacitance = [picoFarad]
 constexpr double R(tau / C);											//membrane_resistance
 
-constexpr int C_E(1000);
-constexpr int C_I(250);
 constexpr int g(5);														//g = (J_I/J_E)
+constexpr int C_E(1000);												//C_E = 0.1 * nb_excitateur
+constexpr int C_I(C_E / 4);
 constexpr double J_E(0.1);												//J_E = EPSP Amplitude [mV]
 constexpr double J_I(- g * J_E);										//J_I = IPSP Amplitude [mV]
 constexpr int D(15); 													//D = Delay (travel time of spike in axon) [steps]
@@ -35,7 +35,7 @@ constexpr double nu_ext(2 * nu_thr);									//frequence ext [Hz]
 
 typedef std::array<double, D + 1> Buffer;
 
-/*
+/**
  * This class represents a single Neuron
  */
 
@@ -52,96 +52,99 @@ private:
 	double J_;															//Amplitude of the signal that this neuron sends to the ones downstream
 	
 	void set_J(double j);
-	/*
+	/**
 	 * sets J, which is the strength of post synaptic potentiel sent by this neuron, depends on the type of the neuron
-	 * @param: the strength of post synaptic potentiel
+	 * @param j: the strength of post synaptic potentiel
 	 */
 
 public:
 
 	double getMbPotential() const;
-	/*
-	 * @return: Membrane potential
+	/**
+	 * @return Membrane potential
 	 */
 	double getNbSpikes() const;
-	/*
-	 * @return: number of times this neuron has spiked
+	/**
+	 * @return number of times this neuron has spiked
 	 */
 	std::vector<Time> getTimeSpikes() const;
-	/*
-	 * @return: Vector storing all the spike times
+	/**
+	 * @return Vector storing all the spike times
 	 */
 	Time getSingleSpikeTime(int i) const;
-	/*
-	 * @param: i: index of the spike
-	 * @return: returns a single spike time
+	/**
+	 * @param i: index of the spike
+	 * @return returns a single spike time
 	 */
 	bool isRefractory() const;
-	/*
-	 * @return: if the neuron is in a refractory period(true) or not(false)
+	/**
+	 * @return if the neuron is in a refractory period(true) or not(false)
 	 */
 	bool isExitatory() const;
-	/*
-	 * @return: true if this neuron is an excitatory neuron, false if it is inhibitory
+	/**
+	 * @return true if this neuron is an excitatory neuron, false if it is inhibitory
 	 */
 	
 	void setMbPotential(double potMb);
-	/*
-	 * @param: Membrane potential
+	/**
+	 * @param potMb: Membrane potential
 	 */
 	void setRefractory(bool refrac);
-	/*
+	/**
 	 * sets the state of the neurn: refractory or not
-	 * @param: true to set the neuron to refractory, false to set it to normal
+	 * @param refrac: true to set the neuron to refractory, false to set it to normal
 	 */
 	void set_i_ext(double i_ext);
-	/*
+	/**
 	 * sets the external current injected into the neuron
-	 * @param: external current
+	 * @param i_ext: external current
 	 */
 	
 	int idx(int i) const;
-	/*
+	/**
 	 * calculates the index for the buffer
-	 * @param: time to be converted into index
-	 * @return: index
+	 * @param i: time to be converted into index
+	 * @return index
 	 */
 	double solveVoltEqu() const;
-	/*
+	/**
 	 * calculates the new membrane potential for the neuron by solving the differential equation
-	 * @return: membrane potential
+	 * @return membrane potential
 	 */
 	void addSpike(Time temps);
-	/*
+	/**
 	 * stores a spike that occured at a given time in spike_times_
-	 * @param: time at which the spike occured
+	 * @param time at which the spike occured
 	 */
 	void rotateBuffer();
-	/*
+	/**
 	 * shifts all the elements stored in the buffer one place to the right to simulate time passing
 	 */
 	void affiche_buffer() const;
-	/*
+	/**
 	 * prints all the elements stored in the buffer, used verify that it functions correctly
 	 */
 	void fill_buffer(int local_steps, int delay = D);
-	/*
+	/**
 	 * puts a new element into this neuron's buffer
-	 * @param: local_steps: time at which the pre-synaptic spike occured 
-	 * @param: delay: time that the spike takes to arrive to the soma
+	 * @param local_steps: time at which the pre-synaptic spike occured 
+	 * @param delay: time that the spike takes to arrive to the soma
 	 */
 	bool update(int simulation_steps, int start_step = 0);
-	/*
+	/**
 	 * updates the neuron: MbPotential, refractory state, Post Synaptic potentials, rotates buffer...
-	 * @param: simulation_steps: number of times that the neuron is updated
-	 * @param: start_step: time step at which we start
+	 * @param simulation_steps: number of times that the neuron is updated
+	 * @param start_step: time step at which we start
 	 */	
-	Neuron(bool exitatory = true);
-	/*
+	Neuron(bool excitatory = true);
+	/**
 	 * default constructor
-	 * @param: indicates the type of the neuron: excitatory or inhibitory
+	 * @param excitatory: indicates the type of the neuron: excitatory or inhibitory
 	 */
 	~Neuron();
+	/**
+	 * destructor
+	 */
 
 };
 

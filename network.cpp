@@ -31,17 +31,27 @@ void Network::affiche_connections() const
 	
 void Network::create_connections()
 {
-	//ou selctionner 1000 nb random des indices des escitateurs et 250 des excitateurs
+	//ou selectionner 1000 nb random des indices des excitateurs et 250 des inhibiteurs
 	//ainsi on pourra avoir 2x le meme indice
 	std::random_device rd;
     std::mt19937 gen(rd());
-	std::bernoulli_distribution d(0.1);
-	for(size_t i(0); i < nb_neurons; ++i){
-				for(size_t y(0); y < nb_neurons; ++y){
-					if(i != y){											//pas de connection d'un neurone avec lui meme
-						connections_[i][y] = d(gen);
-					}
+    
+    std::uniform_int_distribution<> dis1(0, nb_excitateur);
+    std::uniform_int_distribution<> dis2(nb_excitateur + 1, nb_neurons);
+    int temp(0);
+    
+    //on reprend un autre nb tant que on a pris le meme que l'indice i pck pas de connection d'un neurone avec lui meme
+     for(size_t i(0); i < nb_neurons; ++i){
+		for(size_t j(0); j < (C_E + C_I); ++j){
+			do{
+				if(j < C_E){
+					temp = dis1(gen);
+				}else{
+					temp = dis2(gen);
 				}
+			}while(temp == i);
+				++connections_[i][temp];
+		}
 	}
 }
 
@@ -51,8 +61,8 @@ void Network::update(int simulation_steps)
 	bool spike(false);
 	int step_count(0);
 	
-	/*
-	array<int, 10000> res;
+	/* affiche nb spike par pas de temps
+	array<int, 1000> res;
 	int res1;
 	for(int i(0); i < res.size(); ++i){
 			res[i] = 0;
@@ -80,6 +90,11 @@ void Network::update(int simulation_steps)
 	++step_count;
 	};
 	
+	/*
+	for(int i(0); i < res.size(); ++i){
+			cout << res[i] << " " << endl;
+		}	
+	*/
 }
 
 void Network::reset()
@@ -106,9 +121,9 @@ Network::Network()
 	for(size_t i(0); i < nb_neurons; ++i){
 	try{
 		if(i < nb_excitateur){
-			neurons_[i] = new Neuron(true);
-		}else{
-			neurons_[i] = new Neuron(false);
+				neurons_[i] = new Neuron(true);
+			}else{
+				neurons_[i] = new Neuron(false);
 		}
 	}
 		catch (std::bad_alloc &e)
