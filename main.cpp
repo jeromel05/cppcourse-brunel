@@ -7,7 +7,8 @@
 int main()
 {
 	Network net;
-	net.update(5000);
+	std::cerr << "22" << std::endl;
+	net.update(1000);
 	
 				
 return 0;

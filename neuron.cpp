@@ -18,6 +18,10 @@ Time Neuron::getSingleSpikeTime(int i) const
 	assert(i > 0.0 and i <= getTimeSpikes().size());
 	return spike_times_[i -1];	
 }
+
+vector<Neuron> Neuron::get_synapses_post() const
+{	return synapses_post_;	}
+
 		
 bool Neuron::isRefractory() const
 {	return refractory_;		}
@@ -48,6 +52,11 @@ void Neuron::set_i_ext(double i_ext)
 void Neuron::set_J(double j)
 {
 	J_ = j;
+}
+
+void Neuron::add_connection(Neuron post_neuron)
+{
+	synapses_post_.push_back(post_neuron);
 }
 
 /*
