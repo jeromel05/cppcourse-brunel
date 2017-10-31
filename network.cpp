@@ -18,6 +18,16 @@ void Network::net_set_i_ext(double i_ext)
 		e->set_i_ext(i_ext);
 	}	
 }
+
+double Network::calculateFiringRate() const
+{
+	double res(0.0);
+	for(auto e: neurons_){
+		res += e->getNbSpikes();
+	}
+	return res / nb_neurons;
+}
+
 	
 void Network::create_connections()
 {
@@ -25,9 +35,14 @@ void Network::create_connections()
 	//ainsi on pourra avoir 2x le meme indice
 	std::random_device rd;
     std::mt19937 gen(rd());
-    
+   
     std::uniform_int_distribution<> dis1(0, nb_excitateur - 1);
+    
+    std::random_device rd2;
+    std::mt19937 gen2(rd2());
+    
     std::uniform_int_distribution<> dis2(nb_excitateur, nb_neurons - 1);
+    
     int temp(0);
     
     //on reprend un autre nb tant que on a pris le meme que l'indice i pck pas de connection d'un neurone avec lui meme
@@ -37,7 +52,7 @@ void Network::create_connections()
 				if(j < C_E){
 					temp = dis1(gen);
 				}else{
-					temp = dis2(gen);
+					temp = dis2(gen2);
 				}
 			}while(temp == i);
 				assert(neurons_[i] != nullptr);
@@ -71,18 +86,21 @@ void Network::update(int simulation_steps)
 							out << step_count * h << '\t' << i << '\n';
 						}
 						for(size_t y(0); y < (C_E + C_I); ++y){
-								neurons_[synapses_post_[i][y]]->fill_buffer(step_count);
+							if(neurons_[i]->isExitatory()){
+								neurons_[synapses_post_[i][y]]->fill_buffer(step_count, J_E);
+							}else{
+								neurons_[synapses_post_[i][y]]->fill_buffer(step_count, J_I);
 							}
 						}
 					}
+				}
 					
 	++step_count;
 	};
 	
 	out.close();
 	
-	cout << "nu_thr: " << nu_thr << endl;
-	cout << "nu_ext: " << nu_ext << endl;
+	cout << "Neurons firing rate: " << calculateFiringRate() << endl;
 	
 }
 
@@ -114,15 +132,7 @@ Network::Network()
 	}
 	
 	create_connections();
-	/*
-	for(auto e: synapses_post_){
-		for(auto i: e){
-			cout << i ;
-		}
-		cout << endl;
-	}
-	*/
-	
+
 	cout << "Network initialised" << endl;
 }
 

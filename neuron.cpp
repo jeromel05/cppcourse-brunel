@@ -48,11 +48,6 @@ void Neuron::set_i_ext(double i_ext)
 	i_ext_ = i_ext;
 }
 
-void Neuron::set_J(double j)
-{
-	J_ = j;
-}
-
 /*
 int Neuron::idx(int i) const
 {
@@ -81,10 +76,10 @@ void Neuron::affiche_buffer() const
 	cout << endl;
 }
 
-void Neuron::fill_buffer(int local_steps, int delay)
+void Neuron::fill_buffer(int local_steps,  double psp_amplitude)
 {
-	//buffer_[idx(delay + local_steps)] += J_;
-	buffer_[delay - 1] += J_;
+	//buffer_[idx(delay + local_steps)] += J_;							//fonctionne mieux sans
+	buffer_[D - 1] += psp_amplitude;
 }
 		
 void Neuron::rotateBuffer()
@@ -109,7 +104,7 @@ bool Neuron::update(int simulation_steps, int start_step)
 				setMbPotential(resting_potential);
 				setRefractory(true);
 				++nb_spikes;
-				cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
+				//cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
 		}
 		if(isRefractory()){												//pas de nouveau calcul en période réfractaire
 				setMbPotential(resting_potential);
@@ -118,7 +113,6 @@ bool Neuron::update(int simulation_steps, int start_step)
 						break_time_ = refractory_period;				//on reset breaktime à sa valeur initiale
 					}
 				break_time_ -= h;										//break_time stocke le resting time et est décrementée à chaque passage dans la boucle
-				
 		}else{
 			setMbPotential(solveVoltEqu());
 			buffer_[0] = 0.0;											//on a utilisé le premier element du buffer donc on le remet à 0
@@ -137,11 +131,6 @@ Neuron::Neuron(unsigned int index, bool excitatory)
 	for(auto& e: buffer_){
 		e = 0.0;
 	}
-	if(exitatory_){
-		set_J(J_E);
-	}else{
-		set_J(J_I);
-	}	
 }
 
 Neuron::~Neuron()

@@ -30,10 +30,10 @@ constexpr int nb_neurons(nb_excitateur + nb_inhibiteur);	///<total number of neu
 constexpr int g(5);														///<g = (J_I/J_E)
 constexpr int C_E(0.1 * nb_excitateur);									///<10% of connections
 constexpr int C_I(0.1 * nb_inhibiteur);
-constexpr double J_E(0.1);												///<J_E = EPSP Amplitude [mV]
+constexpr double J_E(0.1);												///<J_E = Excitatory Post Synaptic Potential Amplitude [mV]
 constexpr double J_I(- g * J_E);										///<J_I = IPSP Amplitude [mV]
 
-constexpr double eta(2);												///<eta = nu_ext / nu_thr;
+constexpr double eta(3);												///<eta = nu_ext / nu_thr;
 constexpr double nu_thr(threshold_potential / (C_E * J_E * tau));		///<frequence [Hz]
 constexpr double nu_ext(eta * nu_thr);									///<frequence ext [Hz]
 

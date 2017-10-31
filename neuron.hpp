@@ -21,16 +21,9 @@ private:
 	bool refractory_;						///<indicates if the neuron is in refractory state
 	Time break_time_;						///<time that the neuron spends in refractory state
 	Buffer buffer_;							///<buffer that stores that spike arriving to the neuron
-	double J_;								///<Amplitude of the signal that this neuron sends to the ones downstream
 	unsigned int index_;
 	bool exitatory_;						///<indicates the type of the neuron: excitatory or inhibitory
 
-	
-	void set_J(double j);
-	/**
-	 * @brief sets J, which is the strength of post synaptic potentiel sent by this neuron, depends on the type of the neuron
-	 * @param j: the strength of post synaptic potentiel
-	 */
 
 public:
 
@@ -100,11 +93,11 @@ public:
 	/**
 	 * prints all the elements stored in the buffer, used verify that it functions correctly
 	 */
-	void fill_buffer(int local_steps, int delay = D);
+	void fill_buffer(int local_steps, double psp_amplitude);
 	/**
 	 * puts a new element into this neuron's buffer
 	 * @param local_steps: time at which the pre-synaptic spike occured 
-	 * @param delay: time that the spike takes to arrive to the soma
+	 * @param psp_amplitude: post synaptic potential amplitude
 	 */
 	bool update(int simulation_steps, int start_step = 0);
 	/**
