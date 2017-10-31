@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['getconnections',['getConnections',['../class_network.html#a74b5c20c7d971ba9858f1af2173f1f1f',1,'Network']]],
-  ['getindex',['getIndex',['../class_neuron.html#a2ebcd701dfaa9e9c20b601298f28097a',1,'Neuron']]],
-  ['getmbpotential',['getMbPotential',['../class_neuron.html#a597c020972fdde60177172e2ead3407d',1,'Neuron']]],
-  ['getnbspikes',['getNbSpikes',['../class_neuron.html#a0fb2734908d23505237f09f23a68964a',1,'Neuron']]],
-  ['getneuron',['getNeuron',['../class_network.html#a492dfb4b0c1c5137bd2aa370dda9a10a',1,'Network']]],
-  ['getsinglespiketime',['getSingleSpikeTime',['../class_neuron.html#a431a1194ed11a80f322d0b9760b97cbd',1,'Neuron']]],
-  ['gettimespikes',['getTimeSpikes',['../class_neuron.html#aceb23368994d79e8efb7e527eb400203',1,'Neuron']]]
+  ['getconnections',['getConnections',['../classNetwork.html#a7404c50fcb926a4b19aea2c0c7cfcce4',1,'Network']]],
+  ['getindex',['getIndex',['../classNeuron.html#a00f64bd651ad2cb04cd7465472d725ad',1,'Neuron']]],
+  ['getmbpotential',['getMbPotential',['../classNeuron.html#a7b0a9570b046fbb67e091d46104c6edc',1,'Neuron']]],
+  ['getnbspikes',['getNbSpikes',['../classNeuron.html#a080fe09731808e0b8210713a7e3fdc3a',1,'Neuron']]],
+  ['getneuron',['getNeuron',['../classNetwork.html#a7767cead87830399d635ef53c794aa55',1,'Network']]],
+  ['getsinglespiketime',['getSingleSpikeTime',['../classNeuron.html#a2093e0237b25848202f454e28c63d9ec',1,'Neuron']]],
+  ['gettimespikes',['getTimeSpikes',['../classNeuron.html#a92fc7a865e0c0c60249f92843202c640',1,'Neuron']]]
 ];
