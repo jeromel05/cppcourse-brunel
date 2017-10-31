@@ -4,10 +4,14 @@
 using namespace std;
 
 
-Neuron Network::getNeuron(int index) const
+Neuron Network::getNeuron(unsigned int index) const
 {
-	assert(index > 0);
-	return *neurons_[index - 1];
+	return *neurons_[index];
+}
+
+std::deque<size_t> Network::getConnections(unsigned int indiceNeuron) const
+{
+	return synapses_post_[indiceNeuron];
 }
 
 void Network::net_set_i_ext(double i_ext)
@@ -19,16 +23,20 @@ void Network::net_set_i_ext(double i_ext)
 	}	
 }
 
-double Network::calculateFiringRate() const
+double Network::calculateFiringRatePerSecond(unsigned int total_steps) const
 {
 	double res(0.0);
 	for(auto e: neurons_){
 		res += e->getNbSpikes();
 	}
-	return res / nb_neurons;
+	return res * 10000 / (total_steps * nb_neurons);					// 1 [s] = 10000 [steps]
 }
 
-	
+void Network::addConnection(unsigned int indiceN1, unsigned int indiceN2)
+{
+	synapses_post_[indiceN1].push_back(indiceN2);
+}
+
 void Network::create_connections()
 {
 	//ou selectionner 1000 nb random des indices des excitateurs et 250 des inhibiteurs
@@ -100,7 +108,7 @@ void Network::update(int simulation_steps)
 	
 	out.close();
 	
-	cout << "Neurons firing rate: " << calculateFiringRate() << endl;
+	cout << "Neurons firing rate per second: " << calculateFiringRatePerSecond(simulation_steps) << endl;
 	
 }
 

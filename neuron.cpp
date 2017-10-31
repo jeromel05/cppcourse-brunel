@@ -57,10 +57,14 @@ int Neuron::idx(int i) const
 
 double Neuron::solveVoltEqu() const
 {
-	static std::random_device rd;
-    static std::mt19937 gen(rd());
-	static std::poisson_distribution<> d(nu_ext * C_E * J_E); 		// = 2
-	return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + J_E * d(gen);
+	if(poisson_){
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		static std::poisson_distribution<> d(nu_ext * C_E * J_E); 		// = 2
+		return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0] + J_E * d(gen);
+	}else{
+		return c1 * getMbPotential() + i_ext_ * R * c2 + buffer_[0];
+	}
 }
 
 void Neuron::addSpike(unsigned int time_step)
@@ -125,8 +129,8 @@ bool Neuron::update(int simulation_steps, int start_step)
 	if(nb_spikes > 0) return true; else return false;
 }
 
-Neuron::Neuron(unsigned int index, bool excitatory)
-:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), index_(index), exitatory_(excitatory)
+Neuron::Neuron(unsigned int index, bool excitatory, bool poisson)
+:membrane_potential_(resting_potential), i_ext_(0.0), refractory_(false), break_time_(refractory_period), index_(index), exitatory_(excitatory), poisson_(poisson)
 {
 	for(auto& e: buffer_){
 		e = 0.0;

@@ -1,18 +1,26 @@
 #include <iostream>
+#include "network.hpp"
 #include "neuron.hpp"
 #include "cmath"
 #include "gtest/include/gtest/gtest.h"
 
-//WARNING: The background noise has to be disabled for the tests to work!
+//NOTICE: The poisson distibution has been disabled in this test in order to obtain predictable results
 /**
  * Series of tests verifying that:
  * 	- No spike if i_ext == 1.0
  *  - Spikes arrive at right time with i_ext == 1.01
  *  - Mb potential decreases to 0 with i_ext == 0.0
+ *  - If the buffer system works proprerly and is able to cause spikes
+ *  - If the Inhibitory and excitatory neurons send signals with the correct amplitude J
+ *  - If there is no negative MbPotential
+ *  - If we are able to correctly create inhibitory and excitatory neurons
+ *  - If the netork has the correct number of excitatoy and inhibitory neurons
+ *  - If the neuron firing rate is approximatively correct
+ *  - If the connection function works properly
  */
 
 TEST (neuron_unittest, MembranePotential) {
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.set_i_ext(1.0);
 	neuron.update(1);
@@ -21,7 +29,7 @@ TEST (neuron_unittest, MembranePotential) {
 }
 
 TEST (neuron_unittest, SpikeTime) {
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.set_i_ext(1.01);
 	neuron.update(5000);
@@ -33,7 +41,7 @@ TEST (neuron_unittest, SpikeTime) {
 }
 
 TEST (neuron_unittest, SpikeTimeV2) {
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.set_i_ext(1.01);
 	neuron.update(924);
@@ -44,7 +52,7 @@ TEST (neuron_unittest, SpikeTimeV2) {
 }
 
 TEST (neuron_unittest, RestingPotential) {
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.set_i_ext(0.0);
 	neuron.update(4000);
@@ -53,7 +61,7 @@ TEST (neuron_unittest, RestingPotential) {
 }
 
 TEST (neuron_unittest, NoSpikes) {
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.set_i_ext(1.0);
 	neuron.update(4000);
@@ -62,7 +70,7 @@ TEST (neuron_unittest, NoSpikes) {
 }
 
 TEST (neuron_unittest, excitatory_buffer_test){
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.fill_buffer(0.0, J_E);
 	neuron.update(15);
@@ -71,7 +79,7 @@ TEST (neuron_unittest, excitatory_buffer_test){
 }
 
 TEST (neuron_unittest, inhibitory_buffer_test){
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.fill_buffer(0.0, J_I);
 	neuron.update(15);
@@ -80,7 +88,7 @@ TEST (neuron_unittest, inhibitory_buffer_test){
 }
 
 TEST (neuron_unittest, SpikeCausedbyBuffer){
-	Neuron neuron;
+	Neuron neuron(0, true, false);
 	
 	neuron.fill_buffer(0.0, 20.1);
 	neuron.update(16);
@@ -89,11 +97,41 @@ TEST (neuron_unittest, SpikeCausedbyBuffer){
 }
 
 TEST (neuron_unittest, Neuron_type){
-	Neuron N_E(true);
-	Neuron N_I(false);
+	Neuron N_E(0, true, false);
+	Neuron N_I(1, false, false);
 	
 	EXPECT_TRUE(N_E.isExitatory());
-	EXPECT_FALSE(!N_I.isExitatory());
+	EXPECT_FALSE(N_I.isExitatory());
+}
+
+TEST (neuron_unittest, NeuronFiringRate){
+	Network net;
+	
+	net.update(1000);
+	
+	//firing must be more or less equal to 40, here we test if it's between 20 and 60
+	EXPECT_LE(20, net.calculateFiringRatePerSecond(1000));
+	EXPECT_GE(60, net.calculateFiringRatePerSecond(1000));
+}
+
+TEST (neuron_unittest, Neuron_type_in_Network){
+	Network net;
+	
+	for(size_t i(0); i < nb_neurons; ++i){
+		if(i < nb_excitateur){
+			EXPECT_TRUE(net.getNeuron(i).isExitatory());
+		}else{
+			EXPECT_FALSE(net.getNeuron(i).isExitatory());
+		}
+	}
+}
+
+TEST (neuron_unittest, Connection_in_Network){
+	Network net;
+	
+	net.addConnection(1, 47);
+	
+	EXPECT_EQ(47 , net.getConnections(1).back());
 }
 
 int main(int argc, char **argv){

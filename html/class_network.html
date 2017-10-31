@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>projet neuron: Network Class Reference</title>
+<title>projet_neuron: Network Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,9 +21,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">projet neuron
+   <div id="projectname">projet_neuron
    </div>
-   <div id="projectbrief">Neural network simulation</div>
+   <div id="projectbrief">Brunel Simulation</div>
   </td>
  </tr>
  </tbody>
@@ -66,31 +66,225 @@ $(function() {
 <div class="title">Network Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="network_8hpp_source.html">network.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a15a002105dc2efddb1d61948c0fc8fa5"><td class="memItemLeft" align="right" valign="top"><a id="a15a002105dc2efddb1d61948c0fc8fa5"></a>
-<a class="el" href="class_neuron.html">Neuron</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getNeuron</b> (int index) const</td></tr>
-<tr class="separator:a15a002105dc2efddb1d61948c0fc8fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa821b0a7f34509e55b26bf567231a8d5"><td class="memItemLeft" align="right" valign="top"><a id="aa821b0a7f34509e55b26bf567231a8d5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addNeuron</b> (<a class="el" href="class_neuron.html">Neuron</a> *neuron)</td></tr>
-<tr class="separator:aa821b0a7f34509e55b26bf567231a8d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0033ca6af401a1cb188088b33b9c2eba"><td class="memItemLeft" align="right" valign="top"><a id="a0033ca6af401a1cb188088b33b9c2eba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>net_set_i_ext</b> (double i_ext)</td></tr>
+<tr class="memitem:a492dfb4b0c1c5137bd2aa370dda9a10a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_neuron.html">Neuron</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a492dfb4b0c1c5137bd2aa370dda9a10a">getNeuron</a> (unsigned int index) const</td></tr>
+<tr class="separator:a492dfb4b0c1c5137bd2aa370dda9a10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0033ca6af401a1cb188088b33b9c2eba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a0033ca6af401a1cb188088b33b9c2eba">net_set_i_ext</a> (double i_ext)</td></tr>
 <tr class="separator:a0033ca6af401a1cb188088b33b9c2eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fd78186fff2bdce8c7d8cda83056eff"><td class="memItemLeft" align="right" valign="top"><a id="a3fd78186fff2bdce8c7d8cda83056eff"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>affiche_connections</b> () const</td></tr>
-<tr class="separator:a3fd78186fff2bdce8c7d8cda83056eff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae969dbe0bb85ddf7805bb5ae51e3822d"><td class="memItemLeft" align="right" valign="top"><a id="ae969dbe0bb85ddf7805bb5ae51e3822d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>create_connections</b> ()</td></tr>
-<tr class="separator:ae969dbe0bb85ddf7805bb5ae51e3822d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21afe2155dc4e440c11fd4e7071a2f7e"><td class="memItemLeft" align="right" valign="top"><a id="a21afe2155dc4e440c11fd4e7071a2f7e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (int simulation_steps)</td></tr>
+<tr class="memitem:a74b5c20c7d971ba9858f1af2173f1f1f"><td class="memItemLeft" align="right" valign="top">std::deque&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a74b5c20c7d971ba9858f1af2173f1f1f">getConnections</a> (unsigned int indiceNeuron) const</td></tr>
+<tr class="separator:a74b5c20c7d971ba9858f1af2173f1f1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a053c418fa498b58fb7a06afd0a2a6562"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a053c418fa498b58fb7a06afd0a2a6562">addConnection</a> (unsigned int indiceN1, unsigned int indiceN2)</td></tr>
+<tr class="separator:a053c418fa498b58fb7a06afd0a2a6562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a221a45f5777589ec9582f3d10cc9de68"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a221a45f5777589ec9582f3d10cc9de68">calculateFiringRatePerSecond</a> (unsigned int total_steps) const</td></tr>
+<tr class="separator:a221a45f5777589ec9582f3d10cc9de68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21afe2155dc4e440c11fd4e7071a2f7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a21afe2155dc4e440c11fd4e7071a2f7e">update</a> (int simulation_steps)</td></tr>
 <tr class="separator:a21afe2155dc4e440c11fd4e7071a2f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a320db3d014ddbc7046984fc7d26c1bd5"><td class="memItemLeft" align="right" valign="top"><a id="a320db3d014ddbc7046984fc7d26c1bd5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
-<tr class="separator:a320db3d014ddbc7046984fc7d26c1bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cc2fb4f8fa4d507077e8da85ce5a1c8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a3cc2fb4f8fa4d507077e8da85ce5a1c8">Network</a> ()</td></tr>
+<tr class="separator:a3cc2fb4f8fa4d507077e8da85ce5a1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a4e19cdb4bf0c7ecf82baa643831492"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a7a4e19cdb4bf0c7ecf82baa643831492">~Network</a> ()</td></tr>
+<tr class="separator:a7a4e19cdb4bf0c7ecf82baa643831492"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class simulates en entire network of connected neurons </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a3cc2fb4f8fa4d507077e8da85ce5a1c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cc2fb4f8fa4d507077e8da85ce5a1c8">&#9670;&nbsp;</a></span>Network()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Network::Network </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>updates all the neurons in the network using their own update function also take care of EPSPs of connected neurons </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">simulation_steps</td><td>number of times we want to run the simulation </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7a4e19cdb4bf0c7ecf82baa643831492"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a4e19cdb4bf0c7ecf82baa643831492">&#9670;&nbsp;</a></span>~Network()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Network::~Network </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>default constructor of <a class="el" href="class_network.html">Network</a> </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a053c418fa498b58fb7a06afd0a2a6562"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a053c418fa498b58fb7a06afd0a2a6562">&#9670;&nbsp;</a></span>addConnection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Network::addConnection </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>indiceN1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>indiceN2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>returns the indexes of all the neurons connected to the neuron of index "indiceNeuron" </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">indiceNeuron</td><td>index of the neuron from which we want to get the connections </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a221a45f5777589ec9582f3d10cc9de68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a221a45f5777589ec9582f3d10cc9de68">&#9670;&nbsp;</a></span>calculateFiringRatePerSecond()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Network::calculateFiringRatePerSecond </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>total_steps</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Adds a connection between two neurons, used only for testing </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">indiceN1</td><td>index of the neuron receving the input </td></tr>
+    <tr><td class="paramname">indiceN2</td><td>index of the neuron giving the output </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a74b5c20c7d971ba9858f1af2173f1f1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74b5c20c7d971ba9858f1af2173f1f1f">&#9670;&nbsp;</a></span>getConnections()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::deque&lt; size_t &gt; Network::getConnections </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>indiceNeuron</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>set the value of the external current for all the neurons in the network </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i_ext</td><td>value of external current </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a492dfb4b0c1c5137bd2aa370dda9a10a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a492dfb4b0c1c5137bd2aa370dda9a10a">&#9670;&nbsp;</a></span>getNeuron()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_neuron.html">Neuron</a> Network::getNeuron </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>liberates all the memory allocated manually to attributes that are pointers and need to be freed also initializes the connection matrix to all 0 values </p>
+
+</div>
+</div>
+<a id="a0033ca6af401a1cb188088b33b9c2eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0033ca6af401a1cb188088b33b9c2eba">&#9670;&nbsp;</a></span>net_set_i_ext()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Network::net_set_i_ext </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>i_ext</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>gives access to a single neuron at position index </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>index of the neuron's place in the vector </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>accessed neuron </dd></dl>
+
+</div>
+</div>
+<a id="a21afe2155dc4e440c11fd4e7071a2f7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21afe2155dc4e440c11fd4e7071a2f7e">&#9670;&nbsp;</a></span>update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Network::update </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>simulation_steps</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>calculates the average firing for the whole network per neuron per second </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">total_steps</td><td>total number of steps that we ran in the simulation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>firing rate per neuron per second </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="network_8hpp_source.html">network.hpp</a></li>
 <li>network.cpp</li>

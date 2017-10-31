@@ -17,13 +17,33 @@ class Neuron
 private:
 	double membrane_potential_;				///<Neuron Membrane potential
 	double i_ext_;							///<external current
-	std::vector<unsigned int> spike_times_;			///<number of times this neuron has spiked
+	std::vector<unsigned int> spike_times_;	///<number of times this neuron has spiked
 	bool refractory_;						///<indicates if the neuron is in refractory state
 	Time break_time_;						///<time that the neuron spends in refractory state
 	Buffer buffer_;							///<buffer that stores that spike arriving to the neuron
-	unsigned int index_;
+	unsigned int index_;					///<index of the neuron
 	bool exitatory_;						///<indicates the type of the neuron: excitatory or inhibitory
+	bool poisson_;							///<choose wehter to include the background noise or not
 
+	double solveVoltEqu() const;
+	/**
+	 * calculates the new membrane potential for the neuron by solving the differential equation
+	 * @return membrane potential
+	 */
+	void addSpike(unsigned int time_step);
+	/**
+	 * stores a spike that occured at a given time in spike_times_
+	 * @param time at which the spike occured
+	 */
+	void rotateBuffer();
+	/**
+	 * shifts all the elements stored in the buffer one place to the right to simulate time passing
+	 */
+	 void setRefractory(bool refrac);
+	/**
+	 * sets the state of the neurn: refractory or not
+	 * @param refrac: true to set the neuron to refractory, false to set it to normal
+	 */
 
 public:
 
@@ -53,16 +73,15 @@ public:
 	 * @return true if this neuron is an excitatory neuron, false if it is inhibitory
 	 */
 	unsigned int getIndex() const;
-	
+	/**
+	 * returns the index of the neuron
+	 * @return index of the neuron
+	 */
 	void setMbPotential(double potMb);
 	/**
 	 * @param potMb: Membrane potential
 	 */
-	void setRefractory(bool refrac);
-	/**
-	 * sets the state of the neurn: refractory or not
-	 * @param refrac: true to set the neuron to refractory, false to set it to normal
-	 */
+	
 	void set_i_ext(double i_ext);
 	/**
 	 * sets the external current injected into the neuron
@@ -75,20 +94,7 @@ public:
 	 * @param i: time to be converted into index
 	 * @return index
 	 */
-	double solveVoltEqu() const;
-	/**
-	 * calculates the new membrane potential for the neuron by solving the differential equation
-	 * @return membrane potential
-	 */
-	void addSpike(unsigned int time_step);
-	/**
-	 * stores a spike that occured at a given time in spike_times_
-	 * @param time at which the spike occured
-	 */
-	void rotateBuffer();
-	/**
-	 * shifts all the elements stored in the buffer one place to the right to simulate time passing
-	 */
+	
 	void affiche_buffer() const;
 	/**
 	 * prints all the elements stored in the buffer, used verify that it functions correctly
@@ -105,10 +111,12 @@ public:
 	 * @param simulation_steps: number of times that the neuron is updated
 	 * @param start_step: time step at which we start
 	 */	
-	Neuron(unsigned int index = 0, bool excitatory = true);
+	Neuron(unsigned int index = 0, bool excitatory = true, bool poisson = true);
 	/**
 	 * default constructor
+	 * @param index: index of the neuron
 	 * @param excitatory: indicates the type of the neuron: excitatory or inhibitory
+	 * @param poisson: indicates if you want to enable the background noise: true = enabled, false = disabled
 	 */
 	~Neuron();
 	/**
