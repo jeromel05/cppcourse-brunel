@@ -28,6 +28,9 @@ bool Neuron::isRefractory() const
 bool Neuron::isExitatory() const
 {	return exitatory_;	}
 
+double Neuron::getBufferCase(unsigned int i) const
+{	return buffer_[i];	}
+
 void Neuron::setMbPotential(double potMb)
 {
 	if(potMb >= 0.0){		//Impossible d'avoir un MbPot negatif

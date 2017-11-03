@@ -87,6 +87,8 @@ public:
 	 * @return index of the neuron
 	 */
 	unsigned int getIndex() const;
+	
+	double getBufferCase(unsigned int i) const;
 
 	/**
 	 * @param potMb: Membrane potential

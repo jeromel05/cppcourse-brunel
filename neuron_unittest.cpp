@@ -17,6 +17,7 @@
  *  - If the netork has the correct number of excitatoy and inhibitory neurons
  *  - If the neuron firing rate is approximatively correct
  *  - If the connection function works properly
+ *  - The buffer is put back to 0 after it has been used
  */
 
 TEST (neuron_unittest, MembranePotential) {
@@ -76,6 +77,10 @@ TEST (neuron_unittest, excitatory_buffer_test){
 	neuron.update(15);
 	
 	EXPECT_EQ(0.1, neuron.getMbPotential());
+	
+	for(size_t i(0); i < D+1 ; ++i){
+		EXPECT_NEAR(0, neuron.getBufferCase(i), 1E-3);
+	}
 }
 
 TEST (neuron_unittest, inhibitory_buffer_test){
@@ -91,7 +96,7 @@ TEST (neuron_unittest, SpikeCausedbyBuffer){
 	Neuron neuron(0, true, false);
 	
 	neuron.fill_buffer(0.0, 20.1);
-	neuron.update(16);
+	neuron.update(16);					//we need to update one more step for the neuron to fire
 	
 	EXPECT_EQ(1, neuron.getNbSpikes());
 }

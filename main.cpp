@@ -8,7 +8,7 @@ int main()
 {
 	Network net;
 	
-	net.update(1000);
+	net.update(3000);
 	
 return 0;
 }

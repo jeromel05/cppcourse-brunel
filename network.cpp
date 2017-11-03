@@ -90,7 +90,7 @@ void Network::update(int simulation_steps)
 				assert(neurons_[i] != nullptr);
 					spike = neurons_[i]->update(1, step_count);
 					if(spike){
-						if(i < 50){
+						if(i < 50){ //select only the first 50 neurons
 							out << step_count * h << '\t' << i << '\n';
 						}
 						for(size_t y(0); y < (C_E + C_I); ++y){
