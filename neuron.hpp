@@ -88,6 +88,11 @@ public:
 	 */
 	unsigned int getIndex() const;
 	
+	/**
+	 * to know the values stored in the buffer, used for testing
+	 * @param i: index of the buffer case
+	 * @return value of the case of index i
+	 */
 	double getBufferCase(unsigned int i) const;
 
 	/**
