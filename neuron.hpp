@@ -23,7 +23,7 @@ private:
 	Buffer buffer_;							///<buffer that stores that spike arriving to the neuron
 	unsigned int index_;					///<index of the neuron
 	bool exitatory_;						///<indicates the type of the neuron: excitatory or inhibitory
-	bool poisson_;							///<choose wehter to include the background noise or not
+	bool poisson_;						///<choose wehter to include the background noise or not
 
 	/**
 	 * calculates the new membrane potential for the neuron by solving the differential equation
