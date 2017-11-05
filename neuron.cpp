@@ -106,7 +106,7 @@ bool Neuron::update(int simulation_steps, int start_step)
 	
 	while(step_count < simulation_steps){
 			
-		if(getMbPotential() >= threshold_potential){					//on test d'abord si potentiel >= threshold -> passe moins souvent dans la boucle
+		if(getMbPotential() >= threshold_potential){				//on teste d'abord si potentiel >= threshold -> passe moins souvent dans la boucle
 				addSpike(step_count);
 				setMbPotential(resting_potential);
 				setRefractory(true);
