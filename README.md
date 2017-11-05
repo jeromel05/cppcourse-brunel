@@ -1,3 +1,0 @@
-# Neuron
-
-First edit
