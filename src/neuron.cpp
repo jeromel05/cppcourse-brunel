@@ -29,7 +29,10 @@ bool Neuron::isExitatory() const
 {	return exitatory_;	}
 
 double Neuron::getBufferCase(unsigned int i) const
-{	return buffer_[i];	}
+{	
+	assert(i < D + 1);	
+	return buffer_[i];	
+}
 
 void Neuron::setMbPotential(double potMb)
 {
@@ -111,7 +114,6 @@ bool Neuron::update(int simulation_steps, int start_step)
 				setMbPotential(resting_potential);
 				setRefractory(true);
 				++nb_spikes;
-				//cerr << "spike at:" << spike_times_[getNbSpikes() - 1] << " ms" << endl;
 		}
 		if(isRefractory()){												//pas de nouveau calcul en période réfractaire
 				setMbPotential(resting_potential);
@@ -123,8 +125,7 @@ bool Neuron::update(int simulation_steps, int start_step)
 		}else{
 			setMbPotential(solveVoltEqu());
 			buffer_[0] = 0.0;											//on a utilisé le premier element du buffer donc on le remet à 0
-		}
-	//cerr << "MbPotential :" << getMbPotential() << endl;		
+		}		
 	rotateBuffer();
 	++step_count;
 	};
