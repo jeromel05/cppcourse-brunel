@@ -27,5 +27,5 @@ data1 = select.transpose()
 pl.scatter(0.1 * data1[0], data1[1], alpha =0.8, edgecolors ='none');
 pl.show();
 
-n, bins, patches = pl.hist(data1[0], 50, normed=0, alpha=0.75);
+n, bins, patches = pl.hist(0.1 * data1[0], 50, normed=0, alpha=0.75);
 pl.show();
