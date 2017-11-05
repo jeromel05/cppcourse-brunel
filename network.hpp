@@ -14,7 +14,7 @@
 class Network
 {
 private:
-	std::array<Neuron*, nb_neurons> neurons_; 				///< list of all the neurons constituting the network
+	std::array<Neuron*, nb_neurons> neurons_; 		   ///< list of all the neurons constituting the network
 	std::array<std::deque<size_t>, nb_neurons> synapses_post_; ///< Two dimension table that stores the index of all the connections between neurons, one line correspond to the connections of one neuron
 	
 	/**
