@@ -41,7 +41,7 @@ void Network::create_connections()
 {
 	//ou selectionner 1000 nb random des indices des excitateurs et 250 des inhibiteurs
 	//ainsi on pourra avoir 2x le meme indice
-	std::random_device rd;
+    std::random_device rd;
     std::mt19937 gen(rd());
    
     std::uniform_int_distribution<> dis1(0, nb_excitateur - 1);
