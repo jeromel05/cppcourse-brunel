@@ -20,7 +20,7 @@ add_executable(neuron_unittest neuron.cpp network.cpp neuron_unittest.cpp)
 target_link_libraries(neuron_unittest gtest gtest_main)
 add_test(neuron_unittest neuron_unittest)
 
-# first we can indicate the documentation build as an option and set it to ON by default
+#  first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)
 
 # check if Doxygen is installed
