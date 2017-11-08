@@ -10,10 +10,10 @@ typedef double Time;
 
 
 //-------SINGLE NEURON--------------------------------------------------//
-constexpr Time h(0.1);													///< smallest time unit available is 1ms
+constexpr Time h(0.1);													///< smallest time unit available is 1step which is 0.1ms
 constexpr double threshold_potential(20.0);								///< potential above which the neuron spikes [mV]
 constexpr Time tau(20.0);
-constexpr Time refractory_period(0.2);
+constexpr Time refractory_period(2.0);          //2ms = 20 steps
 constexpr double resting_potential(0.0);								///< doit etre a 0.0 car la formule le fait revenir à cette valeur, shift tout de +0.070
 constexpr double C(1.0);												///< capacitance = [picoFarad]
 constexpr double R(tau / C);											///< membrane_resistance
