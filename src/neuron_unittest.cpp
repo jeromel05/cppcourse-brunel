@@ -38,7 +38,7 @@ TEST (neuron_unittest, SpikeTime) {
 	EXPECT_EQ(92.4, neuron.getSingleSpikeTime(1) * h);
 	EXPECT_NEAR(185.100 - 1E-3, neuron.getSingleSpikeTime(2) * h, 185.100 + 1E-3); //pas possible de faible l'égalité exacte avec ce nb
 	EXPECT_EQ(277.7, neuron.getSingleSpikeTime(3) * h);
-	EXPECT_EQ(370.3, neuron.getSingleSpikeTime(4) * h);
+	EXPECT_EQ(375.7, neuron.getSingleSpikeTime(4) * h);
 }
 
 TEST (neuron_unittest, SpikeTimeV2) {
