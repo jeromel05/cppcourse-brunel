@@ -37,8 +37,8 @@ TEST (neuron_unittest, SpikeTime) {
 	
 	EXPECT_EQ(92.4, neuron.getSingleSpikeTime(1) * h);
 	EXPECT_NEAR(185.100 - 1E-3, neuron.getSingleSpikeTime(2) * h, 185.100 + 1E-3); //pas possible de faible l'égalité exacte avec ce nb
-	EXPECT_EQ(277.7, neuron.getSingleSpikeTime(3) * h);
-	EXPECT_EQ(375.7, neuron.getSingleSpikeTime(4) * h);
+	EXPECT_EQ(281.3, neuron.getSingleSpikeTime(3) * h);
+	EXPECT_NEAR(375.700 - 1E-3, neuron.getSingleSpikeTime(2) * h, 375.700 + 1E-3);
 }
 
 TEST (neuron_unittest, SpikeTimeV2) {
@@ -114,7 +114,7 @@ TEST (neuron_unittest, NeuronFiringRate){
 	
 	net.update(1000);
 	
-	//firing must be more or less equal to 40, here we test if it's between 20 and 60
+	//firing must be more or less equal to 40 (for state C), here we test if it's between 20 and 60
 	EXPECT_LE(20, net.calculateFiringRatePerSecond(1000));
 	EXPECT_GE(60, net.calculateFiringRatePerSecond(1000));
 }
